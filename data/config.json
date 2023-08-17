@@ -1,0 +1,14 @@
+{
+  "application": {
+    "logLevel": "info",
+    "hideLogo": false
+  },
+  "srtLiveServer": {
+    "endpoint": "http://192.168.1.101:8181/stats",
+    "fetchInterval": 1000
+  },
+  "websocketRelay": {
+    "port": 9081,
+    "path": "/"
+  }
+}

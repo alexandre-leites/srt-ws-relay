@@ -1,0 +1,23 @@
+{
+  "name": "srt-wb-relay",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "npx tsc && node dist/app.js"
+  },
+  "author": "Alexandre Leites",
+  "license": "MIT",
+  "dependencies": {
+    "@types/node": "^20.5.0",
+    "axios": "^1.4.0",
+    "typescript": "^5.1.6",
+    "ws": "^8.13.0"
+  },
+  "devDependencies": {
+    "@types/axios": "^0.14.0",
+    "@types/winston": "^2.4.4",
+    "@types/ws": "^8.5.5"
+  }
+}
