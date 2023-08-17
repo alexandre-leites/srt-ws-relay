@@ -10,7 +10,7 @@ FROM node:14
 WORKDIR /opt/app
 
 COPY --from=build /app/dist ./dist
-COPY data ./data  # Copy the /data directory to /opt/app/data
+COPY data /opt/app/data
 
 VOLUME /opt/app/data  # Set /opt/app/data as a volume
 
