@@ -14,6 +14,8 @@ COPY data /opt/app/data
 
 VOLUME /opt/app/data  # Set /opt/app/data as a volume
 
+RUN npm install
+
 ENV LOG_LEVEL=info
 ENV SRT_LIVE_SERVER_ENDPOINT=http://localhost:8181/stats
 ENV SRT_LIVE_SERVER_FETCH_INTERVAL=1000
