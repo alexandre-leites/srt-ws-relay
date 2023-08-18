@@ -56,7 +56,7 @@ jobs:
             # Execute commands for main branch
             echo "Updating latest tag on Docker Hub"
             docker pull "${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:$BRANCH_NAME"
-            docker build -t "${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest" .
+            docker tag "${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:$BRANCH_NAME" "${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest"
             docker push "${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest"
           else
             echo "Skipped."
