@@ -1,6 +1,7 @@
 # Phase 1: Build
 FROM node:14 AS build
 WORKDIR /app
+COPY package*.json ./
 COPY . .
 RUN npm install
 RUN npx tsc
@@ -10,8 +11,7 @@ FROM node:14
 WORKDIR /opt/app
 
 COPY --from=build /app/dist ./dist
-COPY --from=build /app/package.json ./  # Copy package.json from the build stage
-COPY --from=build /app/package-lock.json ./  # Copy package-lock.json from the build stage
+COPY --from=build /app/package*.json ./
 COPY data /opt/app/data
 
 RUN npm install
