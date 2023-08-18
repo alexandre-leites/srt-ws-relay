@@ -10,9 +10,9 @@ FROM node:14
 WORKDIR /opt/app
 
 COPY --from=build /app/dist ./dist
+COPY --from=build /app/package.json ./  # Copy package.json from the build stage
+COPY --from=build /app/package-lock.json ./  # Copy package-lock.json from the build stage
 COPY data /opt/app/data
-
-VOLUME /opt/app/data  # Set /opt/app/data as a volume
 
 RUN npm install
 
