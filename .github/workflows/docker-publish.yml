@@ -2,16 +2,18 @@ name: Build and Push Docker Image to Docker Hub
 
 on:
   push:
-    branches: [ "dev", "main", "latest" ]
+    branches:
+      - dev
+      - main  # Assuming this corresponds to the master branch
   pull_request:
-    branches: [ "dev", "main", "latest" ]
+    branches:
+      - dev
+      - main
   schedule:
     - cron: "0 0 * * *"
 
 env:
-  # Use docker.io for Docker Hub if empty
   REGISTRY: docker.io
-  # github.repository as <account>/<repo>
   IMAGE_NAME: alexslx/srt-ws-relay
 
 jobs:
@@ -20,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out the repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
         with:
           ref: ${{ github.ref }}
 
@@ -46,3 +48,20 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+
+  update_latest_tag:
+    name: Update Latest Tag on Docker Hub
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'  # Only run on pushes to main branch
+    steps:
+      - name: Log in to Docker Hub
+        uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      
+      - name: Update latest tag on Docker Hub
+        run: |
+          docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+          docker tag ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }} ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+          docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
