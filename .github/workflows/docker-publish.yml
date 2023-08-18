@@ -51,10 +51,11 @@ jobs:
       
       - name: Update latest tag (for main branch)
         run: |
-          if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
+          BRANCH_NAME=${GITHUB_REF#refs/heads/}
+          if [[ "$BRANCH_NAME" == "main" ]]; then
             # Execute commands for main branch
             echo "Updating latest tag on Docker Hub"
-            docker pull "${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest"
+            docker pull "${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:$BRANCH_NAME"
             docker build -t "${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest" .
             docker push "${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest"
           else
