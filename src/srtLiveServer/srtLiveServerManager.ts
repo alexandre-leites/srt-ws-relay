@@ -5,12 +5,10 @@ import WebSocketServer from '../websocketRelay/webSocketRelayServer';
 
 class SrtLiveServerManager {
   private lastSentData: string | null;
-  private lastSentTime: number;
   private publisherBitrateHistory: Record<string, Array<{ timestamp: number; bitrate: number }>> = {};
 
   constructor() {
     this.lastSentData = null;
-    this.lastSentTime = 0;
     this.publisherBitrateHistory = {};
   }
 
@@ -68,14 +66,11 @@ class SrtLiveServerManager {
       }
 
       const formattedData = JSON.stringify(data, null, 2);
-      if (formattedData === this.lastSentData && (Date.now() - this.lastSentTime) < 60000) {
-        return;
+      if (formattedData !== this.lastSentData) {
+        this.lastSentData = formattedData;
+        WebSocketServer.sendToClients(data);
+        logger.debug(`SRT Server Response: ${formattedData}`);
       }
-
-      this.lastSentData = formattedData;
-      this.lastSentTime = Date.now();
-      WebSocketServer.sendToClients(data);
-      logger.debug(`SRT Server Response: ${formattedData}`);
     } catch (error) {
       logger.error(error);
     }
