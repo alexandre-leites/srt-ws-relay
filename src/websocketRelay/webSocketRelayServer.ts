@@ -7,11 +7,13 @@ class WebSocketRelayServer {
   private server: http.Server;
   private wss: WebSocket.Server;
   private lastData: string | null;
+  private lastSentTime: number;
 
   constructor() {
     this.server = http.createServer();
     this.wss = new WebSocket.Server({ server: this.server, path: config.websocketRelay.path });
     this.lastData = null;
+    this.lastSentTime = 0;
 
     this.setupWebSocketConnection();
     this.startServer();
@@ -38,8 +40,9 @@ class WebSocketRelayServer {
   public sendToClients(data: any): void {
     const formattedData = JSON.stringify(data);
 
-    if (formattedData !== this.lastData) {
+    if (formattedData !== this.lastData || (Date.now() - this.lastSentTime) > 60000) {
       this.lastData = formattedData;
+      this.lastSentTime = Date.now();
       this.wss.clients.forEach((client) => {
         if (client.readyState === WebSocket.OPEN) {
           client.send(formattedData);
